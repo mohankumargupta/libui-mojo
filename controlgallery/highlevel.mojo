@@ -114,7 +114,7 @@ struct Entry(Expandable, Widget, Copyable):
         uiEntrySetText(self._handle, _to_c_str(text))
 
     fn expand(mut self) -> Self:
-        return self^
+        return self.copy()
 
     fn read_only(self) -> Bool:
         return uiEntryReadOnly(self._handle) != 0
@@ -558,7 +558,7 @@ struct MultilineEntry(Expandable, Widget, Copyable):
         uiMultilineEntrySetReadOnly(self._handle, Int32(1) if readonly else Int32(0))
 
     fn expand(mut self) -> Self:
-        return self^
+        return self.copy()
 
 # ============================================================================ 
 # Form
