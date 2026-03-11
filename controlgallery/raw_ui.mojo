@@ -489,4 +489,59 @@ fn uiFreeText(text: MutCharPtr):
 fn uiNewMenu(text: CharPtr) -> MenuPtr:
     return external_call["uiNewMenu", MenuPtr](text)
 
+fn uiTimer(milliseconds: c_int, f: VoidPtr, data: VoidPtr):
+    external_call["uiTimer", NoneType](milliseconds, f, data)
 
+fn uiOnShouldQuit(f: VoidPtr, data: VoidPtr):
+    external_call["uiOnShouldQuit", NoneType](f, data)
+
+fn uiControlHandle(c: VoidPtr) -> UInt:
+    return external_call["uiControlHandle", UInt](c)
+
+fn uiControlParent(c: VoidPtr) -> VoidPtr:
+    return external_call["uiControlParent", VoidPtr](c)
+
+fn uiControlSetParent(c: VoidPtr, parent: VoidPtr):
+    external_call["uiControlSetParent", NoneType](c, parent)
+
+fn uiControlToplevel(c: VoidPtr) -> c_int:
+    return external_call["uiControlToplevel", c_int](c)
+
+fn uiControlVerifySetParent(c: VoidPtr, parent: VoidPtr):
+    external_call["uiControlVerifySetParent", NoneType](c, parent)
+
+fn uiControlEnabledToUser(c: VoidPtr) -> c_int:
+    return external_call["uiControlEnabledToUser", c_int](c)
+
+fn uiMenuAppendItem(m: MenuPtr, name: CharPtr) -> MenuItemPtr:
+    return external_call["uiMenuAppendItem", MenuItemPtr](m, name)
+
+fn uiMenuAppendCheckItem(m: MenuPtr, name: CharPtr) -> MenuItemPtr:
+    return external_call["uiMenuAppendCheckItem", MenuItemPtr](m, name)
+
+fn uiMenuAppendQuitItem(m: MenuPtr) -> MenuItemPtr:
+    return external_call["uiMenuAppendQuitItem", MenuItemPtr](m)
+
+fn uiMenuAppendPreferencesItem(m: MenuPtr) -> MenuItemPtr:
+    return external_call["uiMenuAppendPreferencesItem", MenuItemPtr](m)
+
+fn uiMenuAppendAboutItem(m: MenuPtr) -> MenuItemPtr:
+    return external_call["uiMenuAppendAboutItem", MenuItemPtr](m)
+
+fn uiMenuAppendSeparator(m: MenuPtr):
+    external_call["uiMenuAppendSeparator", NoneType](m)
+
+fn uiMenuItemEnable(m: MenuItemPtr):
+    external_call["uiMenuItemEnable", NoneType](m)
+
+fn uiMenuItemDisable(m: MenuItemPtr):
+    external_call["uiMenuItemDisable", NoneType](m)
+
+fn uiMenuItemOnClicked(m: MenuItemPtr, f: VoidPtr, data: VoidPtr):
+    external_call["uiMenuItemOnClicked", NoneType](m, f, data)
+
+fn uiMenuItemChecked(m: MenuItemPtr) -> c_int:
+    return external_call["uiMenuItemChecked", c_int](m)
+
+fn uiMenuItemSetChecked(m: MenuItemPtr, checked: c_int):
+    external_call["uiMenuItemSetChecked", NoneType](m, checked)
