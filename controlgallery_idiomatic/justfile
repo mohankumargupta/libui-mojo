@@ -1,0 +1,32 @@
+set shell := ["sh", "-c"]
+set windows-shell := ["powershell", "-c"]
+
+_main:
+    @just --list
+
+# run source .venv/bin/activate before running this
+build:
+	mojo build ui.mojo -o app -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+demo:
+	mojo build demo.mojo -o demo -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+demo_raw:
+	mojo build demo_raw.mojo -o demo_raw -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+highlevel:
+	mojo build highlevel.mojo -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+highlevelgrok:
+	mojo build highlevelgrok.mojo -o highlevelgrok -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+demo_highlevel:
+	mojo build demo_highlevel.mojo -o demo_highlevel -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+controlgallery:
+	mojo build controlgallery.mojo -o controlgallery -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+controlgallery_idiomatic:
+	mojo build controlgallery_idiomatic.mojo -o controlgallery_idiomatic -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+
+
