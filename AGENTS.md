@@ -1,0 +1,2 @@
+1. To install mojo, follow instructions in mojoinstall.md in this repo
+2. To consult mojo docs, you can see it in mojodocs.md in this repo or it is available here https://docs.modular.com/mojo/manual/
