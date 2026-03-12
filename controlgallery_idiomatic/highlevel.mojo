@@ -673,7 +673,7 @@ struct Form(Container, Copyable):
     fn handle(self) -> VoidPtr:
         return self._handle.bitcast[NoneType]()
 
-    fn append(mut self, label: String, c: Widget, stretchy: Bool = False):
+    fn append[T: Widget](mut self, label: String, c: T, stretchy: Bool = False):
         uiFormAppend(self._handle, _to_c_str(label), c.handle(), Int32(1) if stretchy else Int32(0))
 
     fn delete(mut self, index: Int32):
