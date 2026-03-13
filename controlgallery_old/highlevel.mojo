@@ -7,10 +7,6 @@
 from memory import UnsafePointer
 from raw_ui import *
 
-comptime ALIGN_FILL = Int32(0)
-comptime ALIGN_START = Int32(1)
-comptime ALIGN_CENTER = Int32(2)
-
 struct uiControl:
     pass
 
@@ -36,8 +32,6 @@ fn _from_c_str(ptr: MutCharPtr) -> String:
         if i > 1_000_000:
             break
     return result
-
-
 
 # ============================================================================ 
 # Traits (reusable)
@@ -83,10 +77,6 @@ struct Label(Widget, Copyable):
     fn __init__(out self, text: String = ""):
         self._handle = uiNewLabel(_to_c_str(text))
 
-    fn __init__[P: Container](out self, mut parent: P, text: String = ""):
-        self._handle = uiNewLabel(_to_c_str(text))
-        parent.add(self)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -110,12 +100,6 @@ struct Entry(Expandable, Widget, Copyable):
         self._handle = uiNewEntry()
         if placeholder != "":
             uiEntrySetText(self._handle, _to_c_str(placeholder))
-
-    fn __init__[P: Container](out self, mut parent: P, placeholder: String = ""):
-        self._handle = uiNewEntry()
-        if placeholder != "":
-            uiEntrySetText(self._handle, _to_c_str(placeholder))
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -145,47 +129,11 @@ struct Entry(Expandable, Widget, Copyable):
 # Boxes (HBox done, add VBox)
 # ============================================================================
 
-struct HBox(Container, Copyable):
-    var _handle: BoxPtr
-
-    fn __init__(out self):
-        self._handle = uiNewHorizontalBox()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewHorizontalBox()
-        parent.add(self)
-
-    fn __copyinit__(out self, copy: Self):
-        self._handle = copy._handle
-
-    fn __enter__(self) -> Self:
-        return self.copy()
-
-    fn __exit__(self):
-        pass
-
-    fn handle(self) -> VoidPtr:
-        return self._handle.bitcast[NoneType]()
-
-    fn add[T: Widget](mut self, child: T, stretchy: Bool = False):
-        uiBoxAppend(self._handle, child.handle(), Int32(1) if stretchy else Int32(0))
-
-    fn clear(mut self):
-        pass
-
-    fn set_padded(mut self, padded: Bool):
-        uiBoxSetPadded(self._handle, Int32(1) if padded else Int32(0))
-
-
 struct VBox(Container, Movable, Copyable):
     var _handle: BoxPtr
 
     fn __init__(out self):
         self._handle = uiNewVerticalBox()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewVerticalBox()
-        parent.add(self)
 
     fn __moveinit__(out self, deinit take: Self):
         self._handle = take._handle
@@ -211,9 +159,6 @@ struct VBox(Container, Movable, Copyable):
         for i in range(count - 1, -1, -1):
             uiBoxDelete(self._handle, Int32(i))
 
-    fn set_padded(mut self, padded: Bool):
-        uiBoxSetPadded(self._handle, Int32(1) if padded else Int32(0))
-
 # ============================================================================ 
 # Button (add on_clicked convenience)
 # ============================================================================
@@ -223,10 +168,6 @@ struct Button(Widget, Copyable):
 
     fn __init__(out self, text: String):
         self._handle = uiNewButton(_to_c_str(text))
-
-    fn __init__[P: Container](out self, mut parent: P, text: String):
-        self._handle = uiNewButton(_to_c_str(text))
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -252,10 +193,6 @@ struct Checkbox(Widget, Copyable):
 
     fn __init__(out self, text: String = ""):
         self._handle = uiNewCheckbox(_to_c_str(text))
-
-    fn __init__[P: Container](out self, mut parent: P, text: String = ""):
-        self._handle = uiNewCheckbox(_to_c_str(text))
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -288,10 +225,6 @@ struct Spinbox(Widget, Copyable):
     fn __init__(out self, min_val: Int32, max_val: Int32):
         self._handle = uiNewSpinbox(min_val, max_val)
 
-    fn __init__[P: Container](out self, mut parent: P, min_val: Int32, max_val: Int32):
-        self._handle = uiNewSpinbox(min_val, max_val)
-        parent.add(self)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -316,10 +249,6 @@ struct Slider(Widget, Copyable):
 
     fn __init__(out self, min_val: Int32, max_val: Int32):
         self._handle = uiNewSlider(min_val, max_val)
-
-    fn __init__[P: Container](out self, mut parent: P, min_val: Int32, max_val: Int32):
-        self._handle = uiNewSlider(min_val, max_val)
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -346,10 +275,6 @@ struct ProgressBar(Widget, Copyable):
     fn __init__(out self):
         self._handle = uiNewProgressBar()
 
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewProgressBar()
-        parent.add(self)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -371,10 +296,6 @@ struct Combobox(Widget, Copyable):
 
     fn __init__(out self):
         self._handle = uiNewCombobox()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewCombobox()
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -400,10 +321,6 @@ struct EditableCombobox(Widget, Copyable):
 
     fn __init__(out self):
         self._handle = uiNewEditableCombobox()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewEditableCombobox()
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -433,10 +350,6 @@ struct RadioButtons(Widget, Copyable):
     fn __init__(out self):
         self._handle = uiNewRadioButtons()
 
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewRadioButtons()
-        parent.add(self)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -465,10 +378,6 @@ struct HSeparator(Widget, Copyable):
     fn __init__(out self):
         self._handle = uiNewHorizontalSeparator()
 
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewHorizontalSeparator()
-        parent.add(self)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -480,10 +389,6 @@ struct VSeparator(Widget, Copyable):
 
     fn __init__(out self):
         self._handle = uiNewVerticalSeparator()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewVerticalSeparator()
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -501,10 +406,6 @@ struct Group(Container, Copyable):
     fn __init__(out self, title: String = ""):
         self._handle = uiNewGroup(_to_c_str(title))
 
-    fn __init__[P: Container](out self, mut parent: P, title: String = "", stretchy: Bool = False):
-        self._handle = uiNewGroup(_to_c_str(title))
-        parent.add(self, stretchy=stretchy)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -513,13 +414,6 @@ struct Group(Container, Copyable):
 
     fn title(self) -> String:
         return _from_c_str(uiGroupTitle(self._handle))
-
-    fn __enter__(self) -> Self:
-        return self.copy()
-
-    fn __exit__(self):
-        pass
-
 
     fn set_title(mut self, title: String):
         uiGroupSetTitle(self._handle, _to_c_str(title))
@@ -549,10 +443,6 @@ struct Tab(Container, Copyable):
 
     fn __init__(out self):
         self._handle = uiNewTab()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewTab()
-        parent.add(self)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -595,10 +485,6 @@ struct Grid(Container, Copyable):
 
     fn __init__(out self):
         self._handle = uiNewGrid()
-
-    fn __init__[P: Container](out self, mut parent: P, stretchy: Bool = False):
-        self._handle = uiNewGrid()
-        parent.add(self, stretchy=stretchy)
 
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
@@ -647,13 +533,6 @@ struct MultilineEntry(Expandable, Widget, Copyable):
         else:
             self._handle = uiNewMultilineEntry()
 
-    fn __init__[P: Container](out self, mut parent: P, non_wrapping: Bool = False):
-        if non_wrapping:
-            self._handle = uiNewNonWrappingMultilineEntry()
-        else:
-            self._handle = uiNewMultilineEntry()
-        parent.add(self)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
 
@@ -682,60 +561,6 @@ struct MultilineEntry(Expandable, Widget, Copyable):
         return self.copy()
 
 # ============================================================================ 
-# PasswordEntry
-# ============================================================================
-struct PasswordEntry(Widget, Copyable):
-    var _handle: EntryPtr
-
-    fn __init__(out self):
-        self._handle = uiNewPasswordEntry()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewPasswordEntry()
-        parent.add(self)
-
-    fn __copyinit__(out self, copy: Self):
-        self._handle = copy._handle
-
-    fn __enter__(self) -> Self:
-        return self.copy()
-
-    fn __exit__(self):
-        pass
-
-    fn handle(self) -> VoidPtr:
-        return self._handle.bitcast[NoneType]()
-
-# ============================================================================ 
-# SearchEntry
-# ============================================================================
-struct SearchEntry(Widget, Copyable):
-    var _handle: EntryPtr
-
-    fn __init__(out self):
-        self._handle = uiNewSearchEntry()
-
-    fn __init__[P: Container](out self, mut parent: P):
-        self._handle = uiNewSearchEntry()
-        parent.add(self)
-
-    fn __copyinit__(out self, copy: Self):
-        self._handle = copy._handle
-
-    fn __enter__(self) -> Self:
-        return self.copy()
-
-    fn __exit__(self):
-        pass
-
-    fn handle(self) -> VoidPtr:
-        return self._handle.bitcast[NoneType]()
-
-
-
-
-
-# ============================================================================ 
 # Form
 # ============================================================================
 
@@ -745,24 +570,13 @@ struct Form(Container, Copyable):
     fn __init__(out self):
         self._handle = uiNewForm()
 
-    fn __init__[P: Container](out self, mut parent: P, stretchy: Bool = False):
-        self._handle = uiNewForm()
-        parent.add(self, stretchy=stretchy)
-
     fn __copyinit__(out self, copy: Self):
         self._handle = copy._handle
-
-    fn __enter__(self) -> Self:
-        return self.copy()
-
-    fn __exit__(self):
-        pass
-
 
     fn handle(self) -> VoidPtr:
         return self._handle.bitcast[NoneType]()
 
-    fn append[T: Widget](mut self, label: String, c: T, stretchy: Bool = False):
+    fn append(mut self, label: String, c: Widget, stretchy: Bool = False):
         uiFormAppend(self._handle, _to_c_str(label), c.handle(), Int32(1) if stretchy else Int32(0))
 
     fn delete(mut self, index: Int32):
@@ -901,8 +715,7 @@ struct Window(Container, Movable, Copyable):
         self._handle = take._handle
 
     fn __exit__(self):
-        if uiControlVisible(self.handle()) == 0:
-            self.show()
+        pass
 
     fn handle(self) -> VoidPtr:
         return self._handle.bitcast[NoneType]()
@@ -1018,4 +831,6 @@ fn control_verify_set_parent(c: Widget, parent: Widget):
 
 fn control_enabled_to_user(c: Widget) -> Bool:
     return uiControlEnabledToUser(c.handle()) != 0
+
+# End of file
 
