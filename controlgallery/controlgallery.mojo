@@ -255,13 +255,13 @@ fn main():
         tabs.append("Basic Controls", basic_controls)
         tabs.set_margined(0, True)
 
-#         var numbers = make_numbers_page(state_data)
-#         tabs.append("Numbers and Lists", numbers)
-#         tabs.set_margined(1, True)
-# 
-#         var choosers = make_data_choosers_page(state_data)
-#         tabs.append("Data Choosers", choosers)
-#         tabs.set_margined(2, True)
+        var numbers = make_numbers_page(state_data)
+        tabs.append("Numbers and Lists", numbers)
+        tabs.set_margined(1, True)
+ 
+        var choosers = make_data_choosers_page(state_data)
+        tabs.append("Data Choosers", choosers)
+        tabs.set_margined(2, True)
 
     app.run()
     app.cleanup()
