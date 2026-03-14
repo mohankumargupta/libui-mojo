@@ -641,10 +641,10 @@ struct Tab(Container, Copyable):
     fn handle(self) -> VoidPtr:
         return self._handle.bitcast[NoneType]()
 
-    fn append(mut self, name: String, c: Widget):
+    fn append[T: Widget](mut self, name: String, c: T):
         uiTabAppend(self._handle, _to_c_str(name), c.handle())
 
-    fn insert_at(mut self, name: String, before: Int32, c: Widget):
+    fn insert_at[T: Widget](mut self, name: String, before: Int32, c: T):
         uiTabInsertAt(self._handle, _to_c_str(name), before, c.handle())
 
     fn delete(mut self, index: Int32):
@@ -694,7 +694,7 @@ struct Grid(Container, Copyable):
                      Int32(1) if hexpand else Int32(0), halign,
                      Int32(1) if vexpand else Int32(0), valign)
 
-    fn insert_at(mut self, c: Widget, existing: Widget, at: Int32,
+    fn insert_at[T: Widget, E: Widget](mut self, c: T, existing: E, at: Int32,
                  xspan: Int32, yspan: Int32, hexpand: Bool,
                  halign: Int32, vexpand: Bool, valign: Int32):
         uiGridInsertAt(self._handle, c.handle(), existing.handle(), at,
