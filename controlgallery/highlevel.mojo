@@ -491,6 +491,87 @@ struct VSeparator(Widget, Copyable):
     fn handle(self) -> VoidPtr:
         return self._handle.bitcast[NoneType]()
 
+struct DateTimePicker(Widget, Copyable):
+    var _handle: VoidPtr
+
+    fn __init__(out self):
+        self._handle = uiNewDateTimePicker()
+
+    fn __init__[P: Container](out self, mut parent: P):
+        self._handle = uiNewDateTimePicker()
+        parent.add(self)
+
+    fn __copyinit__(out self, copy: Self):
+        self._handle = copy._handle
+
+    fn handle(self) -> VoidPtr:
+        return self._handle
+
+struct DatePicker(Widget, Copyable):
+    var _handle: VoidPtr
+
+    fn __init__(out self):
+        self._handle = uiNewDatePicker()
+
+    fn __init__[P: Container](out self, mut parent: P):
+        self._handle = uiNewDatePicker()
+        parent.add(self)
+
+    fn __copyinit__(out self, copy: Self):
+        self._handle = copy._handle
+
+    fn handle(self) -> VoidPtr:
+        return self._handle
+
+struct TimePicker(Widget, Copyable):
+    var _handle: VoidPtr
+
+    fn __init__(out self):
+        self._handle = uiNewTimePicker()
+
+    fn __init__[P: Container](out self, mut parent: P):
+        self._handle = uiNewTimePicker()
+        parent.add(self)
+
+    fn __copyinit__(out self, copy: Self):
+        self._handle = copy._handle
+
+    fn handle(self) -> VoidPtr:
+        return self._handle
+
+struct FontButton(Widget, Copyable):
+    var _handle: FontBtnPtr
+
+    fn __init__(out self):
+        self._handle = uiNewFontButton()
+
+    fn __init__[P: Container](out self, mut parent: P):
+        self._handle = uiNewFontButton()
+        parent.add(self)
+
+    fn __copyinit__(out self, copy: Self):
+        self._handle = copy._handle
+
+    fn handle(self) -> VoidPtr:
+        return self._handle.bitcast[NoneType]()
+
+struct ColorButton(Widget, Copyable):
+    var _handle: ColorBtnPtr
+
+    fn __init__(out self):
+        self._handle = uiNewColorButton()
+
+    fn __init__[P: Container](out self, mut parent: P):
+        self._handle = uiNewColorButton()
+        parent.add(self)
+
+    fn __copyinit__(out self, copy: Self):
+        self._handle = copy._handle
+
+    fn handle(self) -> VoidPtr:
+        return self._handle.bitcast[NoneType]()
+ 
+
 # ============================================================================ 
 # Group
 # ============================================================================
@@ -942,6 +1023,38 @@ struct Window(Container, Movable, Copyable):
 
     fn set_borderless(mut self, borderless: Bool):
         uiWindowSetBorderless(self._handle, Int32(1) if borderless else Int32(0))
+
+
+    fn open_file(self) -> String:
+        var filename = uiOpenFile(self._handle)
+        if Int(filename) == 0:
+            return String("")
+        var text = _from_c_str(filename)
+        uiFreeText(filename)
+        return text
+
+    fn open_folder(self) -> String:
+        var foldername = uiOpenFolder(self._handle)
+        if Int(foldername) == 0:
+            return String("")
+        var text = _from_c_str(foldername)
+        uiFreeText(foldername)
+        return text
+
+    fn save_file(self) -> String:
+        var filename = uiSaveFile(self._handle)
+        if Int(filename) == 0:
+            return String("")
+        var text = _from_c_str(filename)
+        uiFreeText(filename)
+        return text
+
+    fn msg_box(self, title: String, description: String):
+        uiMsgBox(self._handle, _to_c_str(title), _to_c_str(description))
+
+    fn msg_box_error(self, title: String, description: String):
+        uiMsgBoxError(self._handle, _to_c_str(title), _to_c_str(description))
+ 
 
     fn clear(mut self):
         uiWindowSetChild(self._handle, VoidPtr())

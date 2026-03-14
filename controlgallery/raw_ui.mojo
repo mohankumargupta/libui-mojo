@@ -194,6 +194,25 @@ fn uiWindowBorderless(w: WinPtr) -> c_int:
 fn uiWindowSetBorderless(w: WinPtr, borderless: c_int):
     external_call["uiWindowSetBorderless", NoneType](w, borderless)
 
+fn uiWindowSetBorderless(w: WinPtr, borderless: c_int):
+    external_call["uiWindowSetBorderless", NoneType](w, borderless)
+
+fn uiOpenFile(parent: WinPtr) -> MutCharPtr:
+    return external_call["uiOpenFile", MutCharPtr](parent)
+
+fn uiOpenFolder(parent: WinPtr) -> MutCharPtr:
+    return external_call["uiOpenFolder", MutCharPtr](parent)
+
+fn uiSaveFile(parent: WinPtr) -> MutCharPtr:
+    return external_call["uiSaveFile", MutCharPtr](parent)
+
+fn uiMsgBox(parent: WinPtr, title: CharPtr, description: CharPtr):
+    external_call["uiMsgBox", NoneType](parent, title, description)
+
+fn uiMsgBoxError(parent: WinPtr, title: CharPtr, description: CharPtr):
+    external_call["uiMsgBoxError", NoneType](parent, title, description)
+
+
 # --- Button Functions ---
 fn uiNewButton(text: CharPtr) -> BtnPtr:
     return external_call["uiNewButton", BtnPtr](text)
@@ -435,6 +454,23 @@ fn uiGridPadded(g: GridPtr) -> c_int:
 
 fn uiGridSetPadded(g: GridPtr, padded: c_int):
     external_call["uiGridSetPadded", NoneType](g, padded)
+
+# --- Date / Time Pickers ---
+fn uiNewDateTimePicker() -> VoidPtr:
+    return external_call["uiNewDateTimePicker", VoidPtr]()
+
+fn uiNewDatePicker() -> VoidPtr:
+    return external_call["uiNewDatePicker", VoidPtr]()
+
+fn uiNewTimePicker() -> VoidPtr:
+    return external_call["uiNewTimePicker", VoidPtr]()
+
+# --- Font / Color Buttons ---
+fn uiNewFontButton() -> FontBtnPtr:
+    return external_call["uiNewFontButton", FontBtnPtr]()
+
+fn uiNewColorButton() -> ColorBtnPtr:
+    return external_call["uiNewColorButton", ColorBtnPtr]()
 
 # --- Multiline Entry Functions ---
 fn uiNewMultilineEntry() -> MultiEntryPtr:
