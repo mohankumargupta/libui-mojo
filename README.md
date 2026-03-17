@@ -1,12 +1,30 @@
 # libui-mojo
 
-Instructions for Ubuntu Noble on WSL2. 
+libui-ng bindings for mojo
 
-1. first build libui-ng using fork https://github.com/mohankumargupta/libui-ng
-2. Copy libui.a to libui-mojo project folder.
-   
-   ```shell
-   apt install -y apt install -y libgtk-3-dev
-   just build
-   ./app
-   ```
+https://github.com/libui-ng/libui-ng
+
+
+Tested on Ubuntu Noble on WSL2. 
+
+## Setup
+
+1. Need to compile libui-ng as a static binary for your os/architecture.
+   3 choices
+   - you can go to https://github.com/libui-ng/libui-ng and follow instructions
+   - I have a modified fork that uses zig to compile https://github.com/mohankumargupta/libui-ng
+   - there is a precompiled static binary avaailable in this fork https://github.com/kojix2/libui-ng
+     (when you unzip, look for libui.a on linux or libui.lib on windows)
+2. if on linux need libgtk-3-dev or whatever it is called on your distro
+
+
+## Project setup
+
+1. git clone this repo and cd to controlgallery. This is the control gallery example from libui-ng 
+2. copy libui.a or libui.lib from setup step.
+3. Copy libui.a to libui-mojo project folder.
+4. Install mojo, then run 
+
+```sh
+	mojo build controlgallery.mojo -o controlgallery -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
+```
