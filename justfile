@@ -5,6 +5,5 @@ _main:
     @just --list
 
 # run source .venv/bin/activate before running this
-build:
-	mojo build ui.mojo -o app -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
-
+controlgallery:
+	mojo build controlgallery.mojo -o controlgallery -Xlinker libui.a $(pkg-config --libs gtk+-3.0 | xargs -n1 echo -Xlinker)
